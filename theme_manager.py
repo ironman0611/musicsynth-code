@@ -6,36 +6,39 @@ class ThemeManager:
         pass
     
     def get_theme_colors(self) -> Dict[str, str]:
-        """Get shadcn-inspired dark color palette"""
+        """Get modern light color palette"""
         return {
-            'background': '#0A0A0A',
-            'foreground': '#FAFAFA',
-            'card': '#161616',
-            'card_foreground': '#FAFAFA',
-            'popover': '#161616',
-            'popover_foreground': '#FAFAFA',
-            'primary': '#FAFAFA',
-            'primary_foreground': '#0A0A0A',
-            'secondary': '#262626',
-            'secondary_foreground': '#FAFAFA',
-            'muted': '#262626',
-            'muted_foreground': '#A1A1AA',
-            'accent': '#262626',
-            'accent_foreground': '#FAFAFA',
-            'destructive': '#DC2626',
-            'destructive_foreground': '#FAFAFA',
-            'border': '#262626',
-            'input': '#262626',
-            'ring': '#D4D4D8',
-            'chart_1': '#E11D48',
-            'chart_2': '#0EA5E9',
-            'chart_3': '#22C55E',
-            'chart_4': '#F59E0B',
-            'chart_5': '#8B5CF6',
+            'background': '#FFFFFF',
+            'foreground': '#1F2937',
+            'card': '#F8FAFC',
+            'card_foreground': '#1F2937',
+            'popover': '#FFFFFF',
+            'popover_foreground': '#1F2937',
+            'primary': '#3B82F6',
+            'primary_foreground': '#FFFFFF',
+            'secondary': '#F1F5F9',
+            'secondary_foreground': '#475569',
+            'muted': '#F8FAFC',
+            'muted_foreground': '#64748B',
+            'accent': '#6366F1',
+            'accent_foreground': '#FFFFFF',
+            'destructive': '#EF4444',
+            'destructive_foreground': '#FFFFFF',
+            'border': '#E2E8F0',
+            'input': '#FFFFFF',
+            'ring': '#3B82F6',
+            'chart_1': '#3B82F6',
+            'chart_2': '#10B981',
+            'chart_3': '#F59E0B',
+            'chart_4': '#8B5CF6',
+            'chart_5': '#EF4444',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'info': '#3B82F6',
         }
     
     def get_modern_css(self) -> str:
-        """Generate shadcn-inspired CSS"""
+        """Generate modern light CSS with clean design and centered layout"""
         colors = self.get_theme_colors()
         
         return f"""
@@ -64,395 +67,539 @@ class ThemeManager:
             --chart-3: {colors['chart_3']};
             --chart-4: {colors['chart_4']};
             --chart-5: {colors['chart_5']};
-            --radius: 0.5rem;
+            --success: {colors['success']};
+            --warning: {colors['warning']};
+            --info: {colors['info']};
+            --radius: 1rem;
         }}
 
+        /* Global Styles */
         .stApp {{
-            background-color: var(--background);
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
             color: var(--foreground);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
         }}
 
-        .main-header {{
-            background-color: var(--card);
+        /* Centered Layout Container */
+        .centered-container {{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }}
+
+        .compact-container {{
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }}
+
+        .auth-container {{
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }}
+
+        /* Modern Header */
+        .modern-header {{
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 3rem 2rem;
+            margin-bottom: 2rem;
             text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }}
 
-        .main-header h1 {{
-            color: var(--foreground);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0 0 0.5rem 0;
-            line-height: 1.2;
+        .modern-header::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
         }}
 
-        .main-header p {{
+        .modern-header h1 {{
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 0 0 1rem 0;
+            line-height: 1.1;
+            letter-spacing: -0.025em;
+        }}
+
+        .modern-header p {{
             color: var(--muted-foreground);
-            font-size: 1.125rem;
-            margin: 0;
-        }}
-
-        .musicsynth-tagline {{
-            color: var(--muted-foreground);
-            font-size: 1rem !important;
-            margin-top: 0.5rem !important;
-            font-style: italic;
-        }}
-
-        .stButton > button {{
-            background-color: var(--primary);
-            color: var(--primary-foreground);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            min-height: 2.5rem;
-        }}
-
-        .stButton > button:hover {{
-            background-color: var(--primary);
-            opacity: 0.9;
-        }}
-
-        .stButton > button:focus {{
-            outline: 2px solid var(--ring);
-            outline-offset: 2px;
-        }}
-
-        .musicsynth-card {{
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            margin: 1rem 0;
-            color: var(--card-foreground);
-        }}
-
-        .musicsynth-card h3 {{
-            color: var(--foreground);
             font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0 0 0.75rem 0;
-            line-height: 1.3;
-        }}
-
-        .musicsynth-card p {{
-            color: var(--muted-foreground);
             margin: 0;
-            line-height: 1.5;
+            font-weight: 500;
         }}
 
+        .modern-tagline {{
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }}
+
+        /* Feature Grid */
         .feature-grid {{
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
         }}
 
-        .feature-item {{
-            background-color: var(--card);
+        .feature-card {{
+            background: #FFFFFF;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }}
 
-        .feature-item:hover {{
-            background-color: var(--accent);
+        .feature-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }}
+
+        .feature-card:hover {{
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-color: var(--primary);
+        }}
+
+        .feature-card:hover::before {{
+            transform: scaleX(1);
         }}
 
         .feature-icon {{
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
             display: block;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
         }}
 
         .feature-title {{
             color: var(--foreground);
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
         }}
 
         .feature-description {{
             color: var(--muted-foreground);
-            font-size: 0.875rem;
-            margin: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 400;
         }}
 
-        .stats-card {{
-            background-color: var(--card);
+        /* Modern Cards */
+        .modern-card {{
+            background: #FFFFFF;
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 1.5rem;
-            margin: 0.75rem 0;
-            text-align: center;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }}
 
-        .stats-number {{
+        .modern-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }}
+
+        .modern-card h3 {{
             color: var(--foreground);
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin: 0;
+            margin: 0 0 1rem 0;
+            line-height: 1.3;
         }}
 
-        .stats-label {{
+        .modern-card p {{
             color: var(--muted-foreground);
-            font-size: 0.75rem;
-            margin: 0.25rem 0 0 0;
-            text-transform: uppercase;
-            font-weight: 500;
-            letter-spacing: 0.05em;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 1rem;
         }}
 
-        .auth-container {{
-            background-color: var(--card);
+        /* Compact Auth Cards */
+        .auth-card {{
+            background: #FFFFFF;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 2rem;
             margin: 2rem auto;
-            max-width: 24rem;
+            max-width: 400px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            overflow: hidden;
         }}
 
-        .stTextInput > div > div > input {{
-            background-color: var(--input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.75rem;
+        .auth-card::before {{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }}
+
+        .auth-card h2 {{
             color: var(--foreground);
-            font-size: 0.875rem;
-            transition: border-color 0.2s ease;
-        }}
-
-        .stTextInput > div > div > input:focus {{
-            border-color: var(--ring);
-            outline: 2px solid var(--ring);
-            outline-offset: 2px;
-        }}
-
-        .stTextInput > label {{
-            color: var(--foreground);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }}
-
-        .stFileUploader {{
-            background-color: var(--card);
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
             text-align: center;
-            transition: border-color 0.2s ease;
+            line-height: 1.3;
         }}
 
-        .stFileUploader:hover {{
-            border-color: var(--muted-foreground);
-        }}
-
-        .sidebar-user {{
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin: 1rem 0;
-            text-align: center;
-        }}
-
-        .sidebar-user h3 {{
-            color: var(--foreground);
-            font-size: 1rem;
-            font-weight: 600;
-            margin: 0 0 0.5rem 0;
-        }}
-
-        .sidebar-user p {{
+        .auth-card p {{
             color: var(--muted-foreground);
-            font-size: 0.875rem;
+            margin: 0 0 1rem 0;
+            text-align: center;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }}
+
+        /* Auth form styling */
+        .auth-card .stForm {{
             margin: 0;
         }}
 
+        .auth-card .stTextInput {{
+            margin-bottom: 1rem;
+        }}
+
+        .auth-card .stButton {{
+            margin-top: 1rem;
+        }}
+
+        /* Tabs styling */
         .stTabs > div > div {{
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 0.25rem;
-            margin: 1rem 0;
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
         }}
 
         .stTabs > div > div > div {{
-            background-color: transparent;
-            border-radius: calc(var(--radius) - 0.125rem);
-            padding: 0.5rem 1rem;
-            margin: 0.125rem;
+            background: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            margin: 0 0.25rem;
             color: var(--muted-foreground);
             font-size: 0.875rem;
             font-weight: 500;
-            transition: all 0.2s ease;
         }}
 
         .stTabs > div > div > div[aria-selected="true"] {{
-            background-color: var(--primary);
+            background: var(--primary);
             color: var(--primary-foreground);
+            border-color: var(--primary);
         }}
 
-        .stAlert {{
-            border-radius: var(--radius);
-            padding: 1rem;
-            margin: 1rem 0;
-            border: 1px solid var(--border);
-        }}
 
-        .stSuccess {{
-            background-color: var(--card);
-            color: var(--chart-3);
-            border-color: var(--chart-3);
-        }}
 
-        .stError {{
-            background-color: var(--card);
-            color: var(--destructive);
-            border-color: var(--destructive);
-        }}
-
-        .stMarkdown {{
-            color: var(--foreground);
-        }}
-
-        .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4 {{
-            color: var(--foreground);
-            font-weight: 600;
-        }}
-
-        .stMarkdown code {{
-            background-color: var(--muted);
-            color: var(--foreground);
-            padding: 0.25rem 0.5rem;
-            border-radius: calc(var(--radius) - 0.125rem);
-            font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+        /* Forgot password link */
+        .forgot-password-link {{
+            color: var(--accent);
+            text-decoration: none;
             font-size: 0.875rem;
         }}
 
-        .stVideo {{
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }}
-
+        /* Password requirements box */
         .password-requirements {{
-            background-color: var(--muted);
-            border-radius: var(--radius);
+            background: var(--muted);
+            border-radius: 0.5rem;
             padding: 1rem;
             margin: 1rem 0;
+            border: 1px solid var(--border);
         }}
 
         .password-requirements h4 {{
-            color: var(--foreground);
-            font-size: 0.875rem;
-            font-weight: 600;
             margin: 0 0 0.5rem 0;
+            font-size: 0.875rem;
+            color: var(--foreground);
+            font-weight: 600;
         }}
 
         .password-requirements ul {{
-            color: var(--muted-foreground);
-            font-size: 0.875rem;
             margin: 0;
             padding-left: 1rem;
+            font-size: 0.8rem;
+            color: var(--muted-foreground);
         }}
 
-        .developer-note {{
-            background-color: var(--card);
+        .password-requirements li {{
+            margin-bottom: 0.25rem;
+        }}
+
+        /* Status Cards */
+        .status-card {{
+            background: #FFFFFF;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1.5rem;
             margin: 1.5rem 0;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }}
 
-        .developer-note h4 {{
-            color: var(--foreground);
+        .status-card.success {{
+            border-left: 4px solid var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, #FFFFFF 100%);
+        }}
+
+        .status-card.warning {{
+            border-left: 4px solid var(--warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, #FFFFFF 100%);
+        }}
+
+        .status-card.error {{
+            border-left: 4px solid var(--destructive);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, #FFFFFF 100%);
+        }}
+
+        .status-card.info {{
+            border-left: 4px solid var(--info);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, #FFFFFF 100%);
+        }}
+
+        /* Buttons */
+        .modern-btn {{
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--primary-foreground);
+            border: none;
+            border-radius: var(--radius);
+            padding: 1rem 2rem;
             font-weight: 600;
-            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }}
 
-        .developer-note p {{
-            color: var(--muted-foreground);
-            margin: 0;
+        .modern-btn:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }}
 
-        .musicsynth-fade-in {{
-            animation: fadeIn 0.3s ease-out;
+        .modern-btn.secondary {{
+            background: var(--secondary);
+            color: var(--secondary-foreground);
+            border: 1px solid var(--border);
         }}
 
+        /* Progress Bars */
+        .modern-progress {{
+            background: var(--muted);
+            border-radius: var(--radius);
+            height: 0.75rem;
+            overflow: hidden;
+        }}
+
+        .modern-progress-bar {{
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+            height: 100%;
+            border-radius: var(--radius);
+            transition: width 0.3s ease;
+        }}
+
+        /* Animations */
         @keyframes fadeIn {{
-            from {{ opacity: 0; transform: translateY(0.5rem); }}
+            from {{ opacity: 0; transform: translateY(30px); }}
             to {{ opacity: 1; transform: translateY(0); }}
         }}
 
-        .musicsynth-slide-in {{
-            animation: slideIn 0.3s ease-out;
+        .fade-in {{
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }}
 
         @keyframes slideIn {{
-            from {{ transform: translateX(-1rem); opacity: 0; }}
+            from {{ transform: translateX(-100%); opacity: 0; }}
             to {{ transform: translateX(0); opacity: 1; }}
         }}
 
-        /* Streamlit specific overrides */
-        .stSelectbox > div > div {{
-            background-color: var(--input);
-            border: 1px solid var(--border);
+        .slide-in {{
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }}
+
+        /* Responsive Design */
+        @media (max-width: 768px) {{
+            .modern-header h1 {{
+                font-size: 2.5rem;
+            }}
+            
+            .feature-grid {{
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }}
+            
+            .modern-card {{
+                padding: 1.5rem;
+            }}
+            
+            .feature-card {{
+                padding: 1.5rem;
+            }}
+
+            .auth-card {{
+                padding: 2rem;
+                margin: 1rem;
+            }}
+
+            .centered-container,
+            .compact-container {{
+                padding: 0 1rem;
+            }}
+        }}
+
+        /* Streamlit Component Overrides */
+        .stButton > button {{
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--primary-foreground);
+            border: none;
             border-radius: var(--radius);
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }}
 
-        .stSelectbox > div > div > div {{
-            color: var(--foreground);
+        .stButton > button:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }}
 
-        .stNumberInput > div > div > input {{
-            background-color: var(--input);
-            border: 1px solid var(--border);
+        .stTextInput > div > div > input {{
+            background: var(--input);
+            border: 2px solid var(--border);
             border-radius: var(--radius);
             color: var(--foreground);
+            padding: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }}
 
-        .stTextArea > div > div > textarea {{
-            background-color: var(--input);
-            border: 1px solid var(--border);
+        .stTextInput > div > div > input:focus {{
+            border-color: var(--ring);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }}
+
+        .stFileUploader > div {{
+            background: var(--card);
+            border: 2px dashed var(--border);
             border-radius: var(--radius);
-            color: var(--foreground);
+            padding: 3rem 2rem;
+            text-align: center;
         }}
 
+        /* Sidebar Styling */
+        .css-1d391kg {{
+            background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+            border-right: 1px solid var(--border);
+        }}
+
+        /* Main Content Area - Centered Layout */
+        .main .block-container {{
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }}
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {{
+            width: 8px;
+        }}
+
+        ::-webkit-scrollbar-track {{
+            background: var(--muted);
+        }}
+
+        ::-webkit-scrollbar-thumb {{
+            background: var(--primary);
+            border-radius: 4px;
+        }}
+
+        ::-webkit-scrollbar-thumb:hover {{
+            background: var(--accent);
+        }}
+
+        /* Success/Error Messages */
+        .stSuccess {{
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, #FFFFFF 100%);
+            border: 1px solid var(--success);
+            border-radius: var(--radius);
+            color: var(--success);
+        }}
+
+        .stError {{
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, #FFFFFF 100%);
+            border: 1px solid var(--destructive);
+            border-radius: var(--radius);
+            color: var(--destructive);
+        }}
+
+        /* Spinner */
         .stSpinner {{
-            border-color: var(--muted-foreground) !important;
+            border-color: var(--primary) !important;
         }}
 
+        /* Progress */
         .stProgress > div > div {{
-            background-color: var(--primary);
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
         }}
 
         .stProgress > div {{
-            background-color: var(--secondary);
+            background: var(--muted);
         }}
         """
     
     def apply_theme(self):
-        """Apply shadcn-inspired theme to the Streamlit app"""
-        st.markdown(f"<style>{self.get_modern_css()}</style>", unsafe_allow_html=True)
-
+        """Apply the modern light theme to Streamlit"""
+        css = self.get_modern_css()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 # Global theme manager instance
 theme_manager = ThemeManager()
 
-
 def apply_modern_theme():
-    """Apply shadcn-inspired theme to the app"""
+    """Apply the modern light theme"""
     theme_manager.apply_theme() 

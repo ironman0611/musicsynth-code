@@ -130,22 +130,18 @@ class SupabaseAuth:
 
 
 def render_auth_forms():
-    """Render MusicSynth authentication forms"""
+    """Render concise MusicSynth authentication form with tabs"""
     auth = SupabaseAuth()
     
     # Apply theme
     theme_manager.apply_theme()
     
-    st.markdown('<div class="auth-container musicsynth-fade-in">', unsafe_allow_html=True)
-    
     # Create tabs for login and register
-    tab1, tab2 = st.tabs(["🎵 Sign In", "✨ Get Started"])
+    tab1, tab2 = st.tabs(["🎵 Sign In", "✨ Sign Up"])
     
     with tab1:
-        st.markdown('<div class="musicsynth-slide-in">', unsafe_allow_html=True)
-        
         with st.form("login_form", clear_on_submit=False):
-            st.markdown("### Welcome Back to MusicSynth")
+            st.markdown("### Welcome Back")
             st.markdown("Continue your musical journey")
             
             email = st.text_input(
@@ -160,9 +156,7 @@ def render_auth_forms():
                 key="login_password"
             )
             
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            col1, col2 = st.columns(2)
+            col1, col2 = st.columns([1, 1])
             with col1:
                 login_button = st.form_submit_button(
                     "Sign In",
@@ -170,7 +164,11 @@ def render_auth_forms():
                     type="primary"
                 )
             with col2:
-                st.markdown("")  # Spacer
+                forgot_button = st.form_submit_button(
+                    "Forgot Password",
+                    use_container_width=True,
+                    type="secondary"
+                )
             
             if login_button:
                 if email and password:
@@ -184,129 +182,106 @@ def render_auth_forms():
                             st.error(result["message"])
                 else:
                     st.error("Please fill in all fields")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Password reset section
-        st.markdown("---")
-        st.markdown("### Forgot Your Password?")
-        
-        with st.form("reset_form", clear_on_submit=True):
-            st.markdown("No worries! Enter your email and we'll send you a reset link")
             
-            reset_email = st.text_input(
-                "Email",
-                placeholder="Enter your email address",
-                key="reset_email"
-            )
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            reset_button = st.form_submit_button(
-                "Send Reset Link",
-                use_container_width=True,
-                type="secondary"
-            )
-            
-            if reset_button:
-                if reset_email:
-                    with st.spinner("Sending reset email..."):
-                        result = auth.reset_password(reset_email)
-                        if result["success"]:
-                            st.success(result["message"])
-                        else:
-                            st.error(result["message"])
-                else:
-                    st.error("Please enter your email address")
+            if forgot_button:
+                st.session_state.show_forgot_password = True
     
     with tab2:
-        st.markdown('<div class="musicsynth-slide-in">', unsafe_allow_html=True)
-        
         with st.form("register_form", clear_on_submit=False):
-            st.markdown("### Join the MusicSynth Community")
+            st.markdown("### Join MusicSynth")
             st.markdown("Start transforming your sheet music into visual magic today!")
             
             reg_email = st.text_input(
                 "Email",
                 placeholder="Enter your email address",
-                key="reg_email"
+                key="register_email"
+            )
+            reg_password = st.text_input(
+                "Password",
+                type="password",
+                placeholder="Create a strong password",
+                key="register_password"
+            )
+            confirm_password = st.text_input(
+                "Confirm Password",
+                type="password",
+                placeholder="Confirm your password",
+                key="confirm_password"
             )
             
-            col1, col2 = st.columns(2)
-            with col1:
-                reg_password = st.text_input(
-                    "Password",
-                    type="password",
-                    placeholder="Create a strong password",
-                    key="reg_password"
-                )
-            with col2:
-                reg_confirm_password = st.text_input(
-                    "Confirm Password",
-                    type="password",
-                    placeholder="Confirm your password",
-                    key="reg_confirm_password"
-                )
-            
-            st.markdown("<br>", unsafe_allow_html=True)
+            # Password requirements
+            st.markdown("""
+            <div class="password-requirements">
+                <h4>Password Requirements:</h4>
+                <ul>
+                    <li>At least 8 characters long</li>
+                    <li>Contains uppercase and lowercase letters</li>
+                    <li>Contains at least one digit</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
             
             register_button = st.form_submit_button(
-                "Start Creating",
+                "Create Account",
                 use_container_width=True,
                 type="primary"
             )
             
             if register_button:
-                if reg_email and reg_password and reg_confirm_password:
-                    if reg_password != reg_confirm_password:
+                if reg_email and reg_password and confirm_password:
+                    if reg_password != confirm_password:
                         st.error("Passwords do not match")
                     else:
                         with st.spinner("Creating your account..."):
                             result = auth.register_user(reg_email, reg_password)
                             if result["success"]:
                                 st.success(result["message"])
-                                st.balloons()
                             else:
                                 st.error(result["message"])
                 else:
                     st.error("Please fill in all fields")
+    
+    # Forgot password functionality
+    if st.session_state.get('show_forgot_password', False):
+        st.markdown("### Reset Your Password")
+        st.markdown("Enter your email address and we'll send you a reset link")
         
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-        # Password requirements with MusicSynth styling
-        st.markdown("""
-        <div class="password-requirements">
-            <h4>🔐 Password Requirements</h4>
-            <ul>
-                <li>At least 8 characters long</li>
-                <li>Contains uppercase and lowercase letters</li>
-                <li>Contains at least one digit</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    # Developer note from the website
-    st.markdown("""
-    <div class="developer-note">
-        <h4>Built with Passion ❤️</h4>
-        <p>Created by a high school student passionate about music education technology</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # MusicSynth footer
-    st.markdown("---")
-    st.markdown("""
-    <div style="text-align: center; padding: 24px; opacity: 0.7;">
-        <p style="margin: 0; font-size: 0.9rem;">
-            🎼 <strong>Transform</strong> • 🎨 <strong>Visualize</strong> • 🚀 <strong>Learn</strong>
-        </p>
-        <p style="margin: 8px 0 0 0; font-size: 0.8rem; opacity: 0.6;">
-            Built with Python, Streamlit, MuseScore, and ❤️
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+        with st.form("forgot_password_form", clear_on_submit=True):
+            forgot_email = st.text_input(
+                "Email",
+                placeholder="Enter your email address",
+                key="forgot_email"
+            )
+            
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                reset_button = st.form_submit_button(
+                    "Send Reset Link",
+                    use_container_width=True,
+                    type="primary"
+                )
+            with col2:
+                cancel_button = st.form_submit_button(
+                    "Cancel",
+                    use_container_width=True,
+                    type="secondary"
+                )
+            
+            if reset_button:
+                if forgot_email:
+                    with st.spinner("Sending reset email..."):
+                        result = auth.reset_password(forgot_email)
+                        if result["success"]:
+                            st.success(result["message"])
+                            st.session_state.show_forgot_password = False
+                        else:
+                            st.error(result["message"])
+                else:
+                    st.error("Please enter your email address")
+            
+            if cancel_button:
+                st.session_state.show_forgot_password = False
+                st.rerun()
 
 
 def require_auth():
@@ -316,6 +291,9 @@ def require_auth():
     if not auth.is_authenticated():
         # Apply theme first
         theme_manager.apply_theme()
+        
+        # Centered container for auth page
+        st.markdown('<div class="compact-container">', unsafe_allow_html=True)
         
         # MusicSynth authentication page
         st.markdown("""
@@ -333,42 +311,36 @@ def require_auth():
         """, unsafe_allow_html=True)
         
         render_auth_forms()
+        
+        # Close the compact container
+        st.markdown('</div>', unsafe_allow_html=True)
+        
         return False
     
     return True
 
 
 def render_user_menu():
-    """Render MusicSynth user menu in sidebar"""
+    """Render MusicSynth user menu in top-right corner"""
     auth = SupabaseAuth()
     
     if auth.is_authenticated():
         user = auth.get_current_user()
         if user:
-            st.sidebar.markdown("""
-            <div class="sidebar-user">
-                <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground); font-weight: 600;">🎵 Welcome!</h3>
-                <p style="margin: 0; font-size: 0.875rem; color: var(--muted-foreground);">{}</p>
-            </div>
-            """.format(user.email), unsafe_allow_html=True)
+            # Create top-right user menu using columns
+            col1, col2, col3 = st.columns([3, 1, 1])
             
-            # Logout button
-            if st.sidebar.button("🚪 Sign Out", use_container_width=True, type="secondary"):
-                auth.logout_user()
-        
-        # Usage statistics
-        st.sidebar.markdown("---")
-        st.sidebar.markdown("""
-        <div class="musicsynth-card">
-            <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground); font-size: 1rem;">🎼 Your Session</h3>
-            <p style="margin: 0; font-size: 0.875rem; color: var(--muted-foreground);">Ready to create musical magic!</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    else:
-        st.sidebar.markdown("""
-        <div class="sidebar-user">
-            <h3 style="margin: 0 0 0.5rem 0; color: var(--muted-foreground); font-weight: 600;">🔒 Sign In Required</h3>
-            <p style="margin: 0; font-size: 0.875rem; color: var(--muted-foreground);">Please sign in to start creating</p>
-        </div>
-        """, unsafe_allow_html=True) 
+            with col2:
+                # User avatar and info
+                st.markdown("""
+                <div style="text-align: center; padding: 0.5rem; background: var(--card); border-radius: 0.5rem; border: 1px solid var(--border);">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">👤</div>
+                    <div style="font-size: 0.75rem; color: var(--muted-foreground); font-weight: 500;">{}</div>
+                </div>
+                """.format(user.email.split('@')[0]), unsafe_allow_html=True)
+            
+            with col3:
+                # Logout button
+                if st.button("🚪 Sign Out", use_container_width=True, type="secondary"):
+                    auth.logout_user()
+                    st.rerun() 

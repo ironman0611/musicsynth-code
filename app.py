@@ -21,7 +21,7 @@ st.set_page_config(
     page_title="MusicSynth - Transform Sheet Music into Visual Magic",
     page_icon="🎵",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Apply MusicSynth theme
@@ -38,29 +38,32 @@ render_user_menu()
 if 'file_processor' not in st.session_state:
     st.session_state.file_processor = FileProcessor()
 
-# MusicSynth header with official branding
+# Centered container for main content
+st.markdown('<div class="centered-container">', unsafe_allow_html=True)
+
+# MusicSynth header with modern branding
 st.markdown("""
-<div class="main-header musicsynth-fade-in">
+<div class="modern-header fade-in">
     <h1>🎵 MusicSynth</h1>
     <p>Transform Sheet Music into Visual Magic</p>
-    <p class="musicsynth-tagline">Experience the future of music learning</p>
+    <p class="modern-tagline">Experience the future of music learning</p>
 </div>
 """, unsafe_allow_html=True)
 
-# Features showcase
+# Features showcase with modern styling
 st.markdown("""
 <div class="feature-grid">
-    <div class="feature-item musicsynth-fade-in">
+    <div class="feature-card fade-in">
         <div class="feature-icon">🎼</div>
         <div class="feature-title">Optical Music Recognition</div>
         <div class="feature-description">Upload sheet music images and watch them transform into digital scores</div>
     </div>
-    <div class="feature-item musicsynth-fade-in">
+    <div class="feature-card fade-in">
         <div class="feature-icon">🎹</div>
         <div class="feature-title">Visual Piano Roll</div>
         <div class="feature-description">See your music come alive with stunning piano roll animations</div>
     </div>
-    <div class="feature-item musicsynth-fade-in">
+    <div class="feature-card fade-in">
         <div class="feature-icon">🎨</div>
         <div class="feature-title">Music Visualization</div>
         <div class="feature-description">Create beautiful visual representations of your musical compositions</div>
@@ -68,23 +71,73 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Environment info with MusicSynth styling
+# Environment info with modern styling
 is_cloud = os.environ.get('STREAMLIT_SERVER_ENVIRONMENT') == 'cloud'
 if is_cloud:
     st.markdown("""
-    <div class="musicsynth-card" style="background-color: var(--card); border: 1px solid var(--destructive);">
-        <h3 style="margin: 0 0 0.5rem 0; color: var(--destructive); font-weight: 600;">☁️ Cloud Environment</h3>
-        <p style="margin: 0; color: var(--muted-foreground);">
-            Running in cloud mode. Image processing is not available. Please upload MusicXML files for the best experience.
-        </p>
+    <div class="status-card warning">
+        <div style="font-size: 1.5rem;">☁️</div>
+        <div>
+            <h3 style="margin: 0 0 0.5rem 0; color: var(--warning); font-weight: 600;">Cloud Environment</h3>
+            <p style="margin: 0; color: var(--muted-foreground);">
+                Running in cloud mode. Image processing is not available. Please upload MusicXML files for the best experience.
+            </p>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-# File upload section with MusicSynth styling
+# How to Use section
 st.markdown("""
-<div class="musicsynth-card">
-    <h3 style="margin: 0 0 0.75rem 0; color: var(--foreground);">📁 Upload Your Music</h3>
-    <p style="margin: 0; color: var(--muted-foreground);">
+<div class="modern-card">
+    <h3>📖 How to Use MusicSynth</h3>
+    <p>Follow these simple steps to transform your sheet music into beautiful visual animations</p>
+</div>
+""", unsafe_allow_html=True)
+
+# Step-by-step guide
+st.markdown("""
+<div class="modern-card">
+    <h4 style="margin: 0 0 1rem 0; color: var(--foreground);">🎯 Step-by-Step Guide:</h4>
+    <ol style="margin: 0; padding-left: 1.5rem; color: var(--muted-foreground); line-height: 1.8;">
+        <li><strong>Upload Your File:</strong> Choose a MusicXML file or sheet music image</li>
+        <li><strong>Wait for Processing:</strong> Our AI will analyze and convert your music</li>
+        <li><strong>Preview Animation:</strong> Watch your music come to life</li>
+        <li><strong>Download Result:</strong> Save your creation to share with others</li>
+        <li><strong>Clean Up:</strong> Remove temporary files when you're done</li>
+    </ol>
+</div>
+""", unsafe_allow_html=True)
+
+# Supported formats
+st.markdown("""
+<div class="modern-card">
+    <h4 style="margin: 0 0 1rem 0; color: var(--foreground);">📄 Supported Formats:</h4>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="background: var(--muted); padding: 1rem; border-radius: 0.5rem;">
+            <h5 style="margin: 0 0 0.5rem 0; color: var(--foreground);">🎼 Music Files:</h5>
+            <div style="font-size: 0.875rem; color: var(--muted-foreground);">
+                <span style="background: var(--card); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin: 0.25rem; font-family: monospace; border: 1px solid var(--border);">.musicxml</span>
+                <span style="background: var(--card); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin: 0.25rem; font-family: monospace; border: 1px solid var(--border);">.xml</span>
+            </div>
+        </div>
+        <div style="background: var(--muted); padding: 1rem; border-radius: 0.5rem;">
+            <h5 style="margin: 0 0 0.5rem 0; color: var(--foreground);">📷 Sheet Music Images:</h5>
+            <div style="font-size: 0.875rem; color: var(--muted-foreground);">
+                <span style="background: var(--card); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin: 0.25rem; font-family: monospace; border: 1px solid var(--border);">.png</span>
+                <span style="background: var(--card); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin: 0.25rem; font-family: monospace; border: 1px solid var(--border);">.jpg</span>
+                <span style="background: var(--card); padding: 0.25rem 0.5rem; border-radius: 0.25rem; margin: 0.25rem; font-family: monospace; border: 1px solid var(--border);">.jpeg</span>
+            </div>
+            <small style="color: var(--muted-foreground); opacity: 0.7;">(desktop only)</small>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+# File upload section with modern styling
+st.markdown("""
+<div class="modern-card">
+    <h3>📁 Upload Your Music</h3>
+    <p>
         Choose a MusicXML file or upload a sheet music image to begin the transformation
     </p>
 </div>
@@ -104,11 +157,11 @@ if uploaded_file is not None:
         'steps': {}
     }
     
-    # MusicSynth processing section
+    # Modern processing section
     st.markdown("""
-    <div class="musicsynth-card">
-        <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground);">⚙️ Creating Magic</h3>
-        <p style="margin: 0; color: var(--muted-foreground);">Converting your music into a stunning visual experience</p>
+    <div class="modern-card">
+        <h3>⚙️ Creating Magic</h3>
+        <p>Converting your music into a stunning visual experience</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -125,11 +178,11 @@ if uploaded_file is not None:
             # Track video generation time
             video_start = time.time()
             
-            # MusicSynth video display section
+            # Modern video display section
             st.markdown("""
-            <div class="musicsynth-card">
-                <h3 style="margin: 0 0 0.75rem 0; color: var(--foreground);">🎥 Your Musical Magic</h3>
-                <p style="margin: 0; color: var(--muted-foreground);">Your sheet music has been transformed into a beautiful visual piano roll animation</p>
+            <div class="modern-card">
+                <h3>🎥 Your Musical Magic</h3>
+                <p>Your sheet music has been transformed into a beautiful visual piano roll animation</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -160,37 +213,43 @@ if uploaded_file is not None:
             # Calculate total time
             timing_stats['total_time'] = time.time() - timing_stats['start_time']
             
-            # MusicSynth statistics section
+            # Modern statistics section
             st.markdown("""
-            <div class="musicsynth-card">
-                <h3 style="margin: 0 0 1rem 0; color: var(--foreground);">📊 Processing Performance</h3>
+            <div class="modern-card">
+                <h3>📊 Processing Performance</h3>
             </div>
             """, unsafe_allow_html=True)
             
-            # Create MusicSynth stats display
+            # Create modern stats display
             col1, col2, col3 = st.columns(3)
             
             with col1:
                 st.markdown("""
-                <div class="stats-card">
-                    <div class="stats-number">{:.2f}s</div>
-                    <div class="stats-label">Music Processing</div>
+                <div class="modern-card">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">{:.2f}s</div>
+                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Music Processing</div>
+                    </div>
                 </div>
                 """.format(timing_stats['steps']['file_processing']), unsafe_allow_html=True)
             
             with col2:
                 st.markdown("""
-                <div class="stats-card">
-                    <div class="stats-number">{:.2f}s</div>
-                    <div class="stats-label">Visual Generation</div>
+                <div class="modern-card">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{:.2f}s</div>
+                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Visual Generation</div>
+                    </div>
                 </div>
                 """.format(timing_stats['steps']['video_generation']), unsafe_allow_html=True)
             
             with col3:
                 st.markdown("""
-                <div class="stats-card">
-                    <div class="stats-number">{:.2f}s</div>
-                    <div class="stats-label">Total Magic Time</div>
+                <div class="modern-card">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">{:.2f}s</div>
+                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Total Magic Time</div>
+                    </div>
                 </div>
                 """.format(timing_stats['total_time']), unsafe_allow_html=True)
             
@@ -274,50 +333,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# MusicSynth sidebar information
-st.sidebar.markdown("---")
-st.sidebar.markdown("""
-<div class="musicsynth-card">
-    <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground);">🚀 How to Use</h3>
-    <ol style="margin: 0; padding-left: 1.25rem; font-size: 0.875rem; color: var(--muted-foreground);">
-        <li>Upload your MusicXML file or sheet music image</li>
-        <li>Watch the magic happen as we process your music</li>
-        <li>Preview your beautiful piano roll visualization</li>
-        <li>Download your creation to share with others</li>
-        <li>Clean up files when you're done</li>
-    </ol>
-</div>
-""", unsafe_allow_html=True)
 
-st.sidebar.markdown("""
-<div class="musicsynth-card">
-    <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground);">📄 Supported Formats</h3>
-    <div style="font-size: 0.875rem; color: var(--muted-foreground);">
-        <div style="margin-bottom: 0.75rem;">
-            <strong style="color: var(--foreground);">🎼 Music Files:</strong><br>
-            <code style="background-color: var(--muted); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">.musicxml</code>
-            <code style="background-color: var(--muted); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">.xml</code>
-        </div>
-        <div>
-            <strong style="color: var(--foreground);">📷 Sheet Music Images:</strong><br>
-            <code style="background-color: var(--muted); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">.png</code>
-            <code style="background-color: var(--muted); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">.jpg</code>
-            <code style="background-color: var(--muted); padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.75rem; margin: 0.125rem;">.jpeg</code>
-            <br><small style="opacity: 0.7; font-size: 0.75rem;">(desktop only)</small>
-        </div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
 
-# Theme info with MusicSynth branding
-st.sidebar.markdown(f"""
-<div class="musicsynth-card">
-    <h3 style="margin: 0 0 0.5rem 0; color: var(--foreground);">🎨 Theme</h3>
-    <p style="margin: 0; font-size: 0.875rem; color: var(--muted-foreground);">
-        Using <strong style="color: var(--foreground);">Dark</strong> theme
-    </p>
-    <p style="margin: 0.25rem 0 0 0; font-size: 0.75rem; color: var(--muted-foreground);">
-        Crafted for musicians and educators
-    </p>
-</div>
-""", unsafe_allow_html=True)
+# Close the centered container
+st.markdown('</div>', unsafe_allow_html=True)
