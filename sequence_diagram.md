@@ -5,14 +5,14 @@
 ```mermaid
 sequenceDiagram
     participant User
-    participant Streamlit as Streamlit App
+    participant MusicSynth as MusicSynth App
     participant FileProcessor
     participant Oemer
     participant Synthesia
     participant FileSystem
 
-    User->>Streamlit: Upload File
-    Streamlit->>FileProcessor: process_uploaded_file()
+    User->>MusicSynth: Upload File
+    MusicSynth->>FileProcessor: process_uploaded_file()
     
     alt Image File (.png, .jpg, .jpeg)
         FileProcessor->>FileSystem: Save uploaded file
@@ -28,8 +28,8 @@ sequenceDiagram
     FileProcessor->>Synthesia: make_video()
     Synthesia-->>FileProcessor: Generate video file
     
-    FileProcessor-->>Streamlit: Return success & video path
-    Streamlit->>User: Display video & statistics
+    FileProcessor-->>MusicSynth: Return success & video path
+    MusicSynth->>User: Display video & statistics
 ```
 
 ## File Processing Details
@@ -95,7 +95,7 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant App as Streamlit App
+    participant App as MusicSynth App
     participant FP as FileProcessor
     participant UI as User Interface
     participant Log as Log File
@@ -116,7 +116,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant User
-    participant App as Streamlit App
+    participant App as MusicSynth App
     participant FP as FileProcessor
     participant FS as FileSystem
 

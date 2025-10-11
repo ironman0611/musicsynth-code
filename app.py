@@ -41,14 +41,38 @@ if 'file_processor' not in st.session_state:
 # Centered container for main content
 st.markdown('<div class="centered-container">', unsafe_allow_html=True)
 
+def load_logo_base64():
+    import base64
+    try:
+        with open("static/logo.jpg", "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except:
+        return None
+
+# Load logo
+logo_data = load_logo_base64()
+if logo_data:
+    logo_src = f"data:image/jpeg;base64,{logo_data}"
+    logo_html = f'<img src="{logo_src}" alt="MusicSynth Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">'
+else:
+    logo_html = '<span style="font-size: 2.5rem; color: white;">🎵</span>'
+
 # MusicSynth header with modern branding
-st.markdown("""
-<div class="modern-header fade-in">
-    <h1>🎵 MusicSynth</h1>
-    <p>Transform Sheet Music into Visual Magic</p>
-    <p class="modern-tagline">Experience the future of music learning</p>
+st.markdown(f"""
+<div class="modern-header fade-in" style="margin-top: 0 !important; padding-top: 0 !important;">
+    <div style="text-align: center; margin-bottom: 1rem; margin-top: 0 !important; padding-top: 0 !important;">
+        <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+            {logo_html}
+        </div>
+    </div>
+    <h1>MusicSynth</h1>
+    <p>Transform Sheet Music into Visual Magic </p>
+                <p style="font-size: 1rem; opacity: 0.8; margin-bottom: 2rem; color: var(--muted-foreground); font-style: italic;">
+                Experience the future of music learning
+            </p>
 </div>
 """, unsafe_allow_html=True)
+
 
 # Features showcase with modern styling
 st.markdown("""
@@ -151,130 +175,207 @@ uploaded_file = st.file_uploader(
 )
 
 if uploaded_file is not None:
-    # Initialize timing statistics
-    timing_stats = {
-        'start_time': time.time(),
-        'steps': {}
-    }
+    # Check if this file has already been processed
+    file_key = f"processed_{uploaded_file.name}_{uploaded_file.size}"
     
-    # Modern processing section
-    st.markdown("""
-    <div class="modern-card">
-        <h3>⚙️ Creating Magic</h3>
-        <p>Converting your music into a stunning visual experience</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Initialize session state for processed files
+    if 'processed_files' not in st.session_state:
+        st.session_state.processed_files = {}
     
-    # Process the uploaded file
-    with st.spinner("🎼 Creating your musical visualization..."):
-        # Track file processing time
-        process_start = time.time()
-        success, message, output_path = st.session_state.file_processor.process_uploaded_file(uploaded_file)
-        timing_stats['steps']['file_processing'] = time.time() - process_start
+    # Initialize modal container (needed for both new and cached processing)
+    modal_container = st.empty()
+    
+    # Check if file is already processed
+    if file_key not in st.session_state.processed_files:
+        # Initialize timing statistics
+        timing_stats = {
+            'start_time': time.time(),
+            'steps': {}
+        }
         
-        if success:
-            st.success(f"✨ {message}")
-            
-            # Track video generation time
-            video_start = time.time()
-            
-            # Modern video display section
-            st.markdown("""
-            <div class="modern-card">
-                <h3>🎥 Your Musical Magic</h3>
-                <p>Your sheet music has been transformed into a beautiful visual piano roll animation</p>
+        # Show modal
+        modal_container.markdown("""
+        <div id="spinner-modal" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        ">
+            <div style="
+                background: white;
+                padding: 3rem;
+                border-radius: 1rem;
+                text-align: center;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+                border: 1px solid var(--border);
+            ">
+                <div style="
+                    width: 80px;
+                    height: 80px;
+                    border: 6px solid #f3f3f3;
+                    border-top: 6px solid var(--primary);
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                    margin: 0 auto 1.5rem auto;
+                "></div>
+                <h3 style="margin: 0; color: var(--foreground); font-size: 1.5rem; font-weight: 600;">
+                    🎼 Creating your musical visualization...
+                </h3>
+                <p style="margin: 0.5rem 0 0 0; color: var(--muted-foreground); font-size: 1rem;">
+                    Please wait while we process your music
+                </p>
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        
+        <style>
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Process the file (timing is tracked internally by FileProcessor)
+        success, message, output_path = st.session_state.file_processor.process_uploaded_file(uploaded_file)
+        
+        # Get timing information from FileProcessor and update timing_stats
+        if hasattr(st.session_state.file_processor, 'timing_stats'):
+            fp_timing = st.session_state.file_processor.timing_stats
             
-            # Try to display the video
-            try:
-                with open(output_path, 'rb') as video_file:
-                    video_bytes = video_file.read()
-                    st.video(video_bytes)
-            except Exception as e:
-                st.warning("Video preview is not available. You can download the video file instead.")
+            # Use FileProcessor's timing data directly
+            timing_stats['steps'] = fp_timing.copy()
             
-            # MusicSynth download section
-            col1, col2, col3 = st.columns([1, 2, 1])
-            with col2:
-                with open(output_path, 'rb') as video_file:
-                    video_bytes = video_file.read()
-                    st.download_button(
-                        label="⬇️ Download Your Creation",
-                        data=video_bytes,
-                        file_name=os.path.basename(output_path),
-                        mime="video/mp4",
-                        use_container_width=True,
-                        type="primary"
-                    )
-            
-            timing_stats['steps']['video_generation'] = time.time() - video_start
-            
-            # Calculate total time
-            timing_stats['total_time'] = time.time() - timing_stats['start_time']
-            
-            # Modern statistics section
-            st.markdown("""
-            <div class="modern-card">
-                <h3>📊 Processing Performance</h3>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Create modern stats display
-            col1, col2, col3 = st.columns(3)
-            
-            with col1:
-                st.markdown("""
-                <div class="modern-card">
-                    <div style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">{:.2f}s</div>
-                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Music Processing</div>
-                    </div>
-                </div>
-                """.format(timing_stats['steps']['file_processing']), unsafe_allow_html=True)
-            
-            with col2:
-                st.markdown("""
-                <div class="modern-card">
-                    <div style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">{:.2f}s</div>
-                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Visual Generation</div>
-                    </div>
-                </div>
-                """.format(timing_stats['steps']['video_generation']), unsafe_allow_html=True)
-            
-            with col3:
-                st.markdown("""
-                <div class="modern-card">
-                    <div style="text-align: center;">
-                        <div style="font-size: 2rem; font-weight: 700; color: var(--success);">{:.2f}s</div>
-                        <div style="color: var(--muted-foreground); font-size: 0.875rem; margin-top: 0.5rem;">Total Magic Time</div>
-                    </div>
-                </div>
-                """.format(timing_stats['total_time']), unsafe_allow_html=True)
-            
-            # Detailed statistics table
-            with st.expander("📈 Detailed Performance Metrics"):
-                stats_df = pd.DataFrame({
-                    'Step': list(timing_stats['steps'].keys()),
-                    'Time (seconds)': [f"{t:.2f}" for t in timing_stats['steps'].values()]
-                })
-                stats_df.loc[len(stats_df)] = ['Total Time', f"{timing_stats['total_time']:.2f}"]
-                st.table(stats_df)
-            
-            # Save timing statistics to a log file
-            log_entry = f"\n{datetime.now()}\n"
-            log_entry += f"File: {uploaded_file.name}\n"
-            for step, duration in timing_stats['steps'].items():
-                log_entry += f"{step}: {duration:.2f} seconds\n"
-            log_entry += f"Total Time: {timing_stats['total_time']:.2f} seconds\n"
-            log_entry += "-" * 50
-            
-            log_path = os.path.join(st.session_state.file_processor.temp_dir, 'processing_stats.log')
-            with open(log_path, 'a') as f:
-                f.write(log_entry)
+            # Calculate total time as sum of all steps
+            timing_stats['total_time'] = sum(fp_timing.values())
         else:
-            st.error(f"❌ {message}")
+            timing_stats['steps'] = {'processing': 0.0}
+            timing_stats['total_time'] = 0.0
+        
+        # Store processing results in session state
+        st.session_state.processed_files[file_key] = {
+            'success': success,
+            'message': message,
+            'output_path': output_path,
+            'timing_stats': timing_stats
+        }
+    else:
+        # Use cached results
+        cached_result = st.session_state.processed_files[file_key]
+        success = cached_result['success']
+        message = cached_result['message']
+        output_path = cached_result['output_path']
+        timing_stats = cached_result['timing_stats']
+        
+        # Hide modal for cached results (no processing needed)
+        modal_container.empty()
+    
+    if success:
+        st.success(f"✨ {message}")
+        
+        # Modern video display section
+        st.markdown("""
+        <div class="modern-card">
+            <h3>🎥 Your Musical Magic</h3>
+            <p>Your sheet music has been transformed into a beautiful visual piano roll animation</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Try to display the video
+        try:
+            with open(output_path, 'rb') as video_file:
+                video_bytes = video_file.read()
+                st.video(video_bytes)
+        except Exception as e:
+            st.warning("Video preview is not available. You can download the video file instead.")
+        
+        # MusicSynth download section
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            with open(output_path, 'rb') as video_file:
+                video_bytes = video_file.read()
+                st.download_button(
+                    label="⬇️ Download Your Creation",
+                    data=video_bytes,
+                    file_name=os.path.basename(output_path),
+                    mime="video/mp4",
+                    use_container_width=True,
+                    type="primary"
+                )
+        
+        # Unified Performance Metrics Section
+        st.markdown("""
+        <div class="modern-card">
+            <h3>📊 Processing Performance</h3>
+            <p style="margin: 0.5rem 0 1.5rem 0; color: var(--muted-foreground);">Detailed timing breakdown for all processing steps</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Create comprehensive stats display
+        stats_data = []
+        for step, duration in timing_stats['steps'].items():
+            # Format step names nicely
+            step_name = step.replace('_', ' ').title()
+            stats_data.append([step_name, f"{duration:.2f}s"])
+        
+        # Add total time
+        stats_data.append(['Total Time', f"{timing_stats['total_time']:.2f}s"])
+        
+        # Display all metrics in a clean grid layout
+        if len(stats_data) > 0:
+            # Create columns based on number of metrics
+            num_cols = min(len(stats_data), 4)  # Max 4 columns
+            cols = st.columns(num_cols)
+            
+            for i, (step, time) in enumerate(stats_data):
+                col_idx = i % num_cols
+                with cols[col_idx]:
+                    # Use different colors for different metric types
+                    if step == 'Total Time':
+                        color = 'var(--success)'
+                        bg_color = 'var(--success)'
+                        text_color = 'white'
+                    elif step == 'Video Generation':
+                        color = 'var(--accent)'
+                        bg_color = 'var(--accent)'
+                        text_color = 'white'
+                    else:
+                        color = 'var(--primary)'
+                        bg_color = 'var(--muted)'
+                        text_color = 'var(--foreground)'
+                    
+                    st.markdown(f"""
+                    <div style="text-align: center; padding: 1.5rem; background: {bg_color}; border-radius: 0.75rem; margin-bottom: 1rem;">
+                        <div style="font-size: 2rem; font-weight: 700; color: {text_color};">{time}</div>
+                        <div style="font-size: 0.875rem; color: {text_color}; margin-top: 0.5rem; opacity: 0.9;">{step}</div>
+                    </div>
+                    """, unsafe_allow_html=True)
+        
+        # Save timing statistics to a log file
+        log_entry = f"\n{datetime.now()}\n"
+        log_entry += f"File: {uploaded_file.name}\n"
+        for step, duration in timing_stats['steps'].items():
+            log_entry += f"{step}: {duration:.2f} seconds\n"
+        log_entry += f"Total Time: {timing_stats['total_time']:.2f} seconds\n"
+        log_entry += "-" * 50
+        
+        log_path = os.path.join(st.session_state.file_processor.temp_dir, 'processing_stats.log')
+        with open(log_path, 'a') as f:
+            f.write(log_entry)
+        
+        # Hide the modal
+        modal_container.empty()
+    else:
+        st.error(f"❌ {message}")
+        
+        # Hide the modal even if processing failed
+        modal_container.empty()
 
 # MusicSynth cleanup section
 st.markdown("---")

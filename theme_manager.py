@@ -544,6 +544,12 @@ class ThemeManager:
             margin: 0 auto;
         }}
 
+        /* Remove padding from main block container */
+        .stMainBlockContainer {{
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }}
+
         /* Custom Scrollbar */
         ::-webkit-scrollbar {{
             width: 8px;

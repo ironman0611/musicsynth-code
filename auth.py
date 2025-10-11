@@ -283,6 +283,15 @@ def render_auth_forms():
                 st.session_state.show_forgot_password = False
                 st.rerun()
 
+def load_logo_base64():
+    import base64
+    try:
+        with open("static/logo.jpg", "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except:
+        return None
+
+
 
 def require_auth():
     """Decorator-like function to require authentication"""
@@ -295,20 +304,30 @@ def require_auth():
         # Centered container for auth page
         st.markdown('<div class="compact-container">', unsafe_allow_html=True)
         
-        # MusicSynth authentication page
-        st.markdown("""
-        <div style="text-align: center; padding: 3rem 1.5rem;">
-            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--foreground); font-weight: 700;">
-                🎵 MusicSynth
-            </h1>
-            <p style="font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--foreground); font-weight: 500;">
-                Transform Sheet Music into Visual Magic
-            </p>
-            <p style="font-size: 1rem; opacity: 0.8; margin-bottom: 2rem; color: var(--muted-foreground); font-style: italic;">
-                Sign in to experience the future of music learning
-            </p>
+        # Load logo
+        logo_data = load_logo_base64()
+        if logo_data:
+            logo_src = f"data:image/jpeg;base64,{logo_data}"
+            logo_html = f'<img src="{logo_src}" alt="MusicSynth Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">'
+        else:
+            logo_html = '<span style="font-size: 2.5rem; color: white;">🎵</span>'
+
+        # MusicSynth header with modern branding
+        st.markdown(f"""
+        <div class="modern-header fade-in" style="margin-top: 0 !important; padding-top: 0 !important;">
+            <div style="text-align: center; margin-bottom: 1rem; margin-top: 0 !important; padding-top: 0 !important;">
+                <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #3B82F6 0%, #6366F1 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    {logo_html}
+                </div>
+            </div>
+            <h1>MusicSynth</h1>
+            <p>Transform Sheet Music into Visual Magic </p>
+                        <p style="font-size: 1rem; opacity: 0.8; margin-bottom: 2rem; color: var(--muted-foreground); font-style: italic;">
+                        Sign in to experience the future of music learning
+                    </p>
         </div>
         """, unsafe_allow_html=True)
+
         
         render_auth_forms()
         
