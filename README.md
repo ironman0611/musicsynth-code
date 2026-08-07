@@ -41,7 +41,7 @@ MusicSynth revolutionizes music education by transforming traditional sheet musi
 - Responsive design optimized for all devices
 
 ## Prerequisites
-- Python 3.9 or higher
+- Python 3.11 or higher
 - [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Oemer (Optical Music Recognition tool; installed via project deps)
 - Supabase account for authentication
@@ -80,8 +80,8 @@ brew install uv
 
 ### 5. Install Dependencies
 ```bash
-# Creates .venv, resolves pyproject.toml, and installs locked deps (including oemer)
-uv sync
+# Creates .venv with Python 3.11+, resolves pyproject.toml, installs locked deps (including oemer)
+uv sync --python 3.11
 ```
 
 `uv sync` installs **oemer 0.1.8+** with OpenCV 4.x. That combination is required: older oemer releases crash on NumPy 1.24+/2.x (`np.int` removal), and OpenCV 5 breaks oemer’s `HoughLinesP` handling. On macOS, `onnxruntime-gpu` is excluded via `[tool.uv]` so the CPU/CoreML `onnxruntime` package is used instead.
