@@ -1,0 +1,34 @@
+[project]
+name = "musicsynth"
+version = "0.1.0"
+description = "Transform sheet music into visual piano-roll animations"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.26.0",
+    "pillow>=10.2.0",
+    "moviepy>=1.0.3",
+    "streamlit>=1.32.0",
+    # Oemer expects OpenCV 4.x HoughLinesP shape (N,1,4); OpenCV 5 returns (N,4)
+    "opencv-python>=4.8,<5",
+    "oemer==0.1.8",
+    "onnx>=1.15.0",
+    "onnxruntime>=1.17.0",
+    "tensorflow>=2.15.0",
+    "keras>=2.15.0",
+    "pandas>=2.2.0",
+    "supabase>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "bcrypt>=4.0.0",
+    "streamlit-authenticator>=0.2.0",
+    "typing-extensions>=4.0.0",
+]
+
+[tool.uv]
+# oemer declares packages that break (or aren't needed) on macOS / with OpenCV 4.
+exclude-dependencies = [
+    "onnxruntime-gpu",
+    "opencv-python-headless",
+    "types-tensorflow",
+    "types-Pillow",
+]

@@ -1,8 +1,13 @@
+# Prefer local installs via uv sync (see pyproject.toml / uv.lock).
+# This file is kept for platforms that expect requirements.txt (e.g. Streamlit Cloud).
 numpy>=1.26.0
 pillow>=10.2.0
 moviepy>=1.0.3
 streamlit>=1.32.0
-oemer==0.1.5
+# Oemer expects OpenCV 4.x HoughLinesP shape (N,1,4); OpenCV 5 returns (N,4) and breaks find_lines
+opencv-python>=4.8,<5
+# oemer 0.1.8 pulls onnxruntime-gpu; on macOS prefer: uv sync (excludes that dep via pyproject.toml)
+oemer==0.1.8
 onnx>=1.15.0
 onnxruntime>=1.17.0
 tensorflow>=2.15.0

@@ -46,12 +46,12 @@ docker-compose --profile dev up -d musicsynth-dev
 
 #### Install Dependencies
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 #### Run the Application
 ```bash
-streamlit run app.py
+uv run streamlit run app.py
 ```
 
 ### Option 3: Streamlit Cloud

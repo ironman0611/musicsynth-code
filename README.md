@@ -41,9 +41,9 @@ MusicSynth revolutionizes music education by transforming traditional sheet musi
 - Responsive design optimized for all devices
 
 ## Prerequisites
-- Python 3.8 or higher
-- pip (Python package installer)
-- Oemer (Optical Music Recognition tool)
+- Python 3.9 or higher
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
+- Oemer (Optical Music Recognition tool; installed via project deps)
 - Supabase account for authentication
 - Docker (optional, for production deployment)
 
@@ -69,30 +69,31 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 STREAMLIT_SERVER_ENVIRONMENT=local
 ```
 
-### 4. Set Up Python Virtual Environment
+### 4. Install uv (if needed)
 ```bash
-# Create a virtual environment
-python -m venv .venv
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Activate the virtual environment
-# On Windows:
-.venv\Scripts\activate
-# On macOS/Linux:
-source .venv/bin/activate
+# Or with Homebrew
+brew install uv
 ```
 
 ### 5. Install Dependencies
 ```bash
-pip install -r requirements.txt
+# Creates .venv, resolves pyproject.toml, and installs locked deps (including oemer)
+uv sync
 ```
 
-### 6. Install Oemer (for local image processing)
+`uv sync` installs **oemer 0.1.8+** with OpenCV 4.x. That combination is required: older oemer releases crash on NumPy 1.24+/2.x (`np.int` removal), and OpenCV 5 breaks oemer’s `HoughLinesP` handling. On macOS, `onnxruntime-gpu` is excluded via `[tool.uv]` so the CPU/CoreML `onnxruntime` package is used instead.
+
+### 6. Run the Application
 ```bash
-pip install oemer==0.1.5
+uv run streamlit run app.py
 ```
 
-### 7. Run the Application
+Or activate the environment and run Streamlit directly:
 ```bash
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
 streamlit run app.py
 ```
 
@@ -188,7 +189,9 @@ MusicSynth/
 ├── file_processor.py     # Music file processing
 ├── synthesia.py          # Video generation engine
 ├── theme_manager.py      # Modern theme system
-├── requirements.txt      # Python dependencies
+├── pyproject.toml        # Project metadata and dependencies (uv)
+├── uv.lock               # Locked dependency versions
+├── requirements.txt      # Exported deps (e.g. Streamlit Cloud)
 ├── Dockerfile           # Container configuration
 ├── docker-compose.yml   # Multi-container setup
 ├── .streamlit/          # Streamlit configuration
